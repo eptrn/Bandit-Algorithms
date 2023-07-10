@@ -51,7 +51,7 @@ def eigen_decomposition(cov_matrix):
 def normalization(n_assets,L,H):
     LP = [l/np.linalg.norm(H[:,n].dot(np.ones(n_assets)))**2 for n,l in enumerate(L)]
     temp = np.diag(LP)
-    temp_s = np.array((list(np.sort(temp))[::-1]))
+    temp_s = np.array((list(np.sort(temp))))
     LP = np.diag(temp_s)
     for i in range(n_assets):
         H[:,i]=H[:,i]/(np.transpose(H[:,i]).dot(np.ones(n_assets)))
@@ -61,23 +61,12 @@ def get_sharpe_ratios(n_assets,H,Lambdas,E_R):
     portfolio_returns = np.matmul(np.transpose(H),np.array(E_R))
     return(portfolio_returns/np.sqrt(np.abs(Lambdas)))
 
-def factor_decomposition(Lambda_norm,H_norm,SR,l):
-    # l is our cutoff 
-    Lambda_inf = Lambda_norm[:l]
-    Lambda_sup = Lambda_norm[l:]
-    H_inf = Lambda_norm[:,:l]
-    H_sup = Lambda_norm[:,l:]
-    SR_inf = SR[:l]
-    SR_sup = SR[l:]
-    return(SR_inf,SR_sup,Lambda_inf,Lambda_sup,H_inf,H_sup)
 
 def objective_function(n_assets,SR,k,tau,choices):
     obj = []
     for i in range(len(SR)):
         obj.append(SR[i]+np.sqrt((2*np.log(k+tau))/(tau+choices[i])))
     return(obj)
-
-
 
 def ucb_policy(n_assets,SR,k,tau,choices):
     return(np.argmax(objective_function(n_assets,SR,k,tau,choices)))
@@ -88,12 +77,27 @@ def ucb_policy(n_assets,SR,k,tau,choices):
 #     return(0)
 
         
-class OrthogonalPortfolio():
-    def __init__(self,n,m,delta_t,l,R_k,tau):
-        self.n = n
-        self.m = m
-        self.delta_t = delta_t
-        self.l = l
-        self.R_k = R_k
-        self.tau = tau
+# class OrthogonalPortfolio():
+#     def __init__(self,n,m,delta_t,l,R_k,tau):
+#         self.n = n
+#         self.m = m
+#         self.delta_t = delta_t
+#         self.l = l
+#         self.R_k = R_k
+#         self.tau = tau
+#         return(0)
+
+
+def factor_decomposition(Lambda_norm,H_norm,SR,l):
+    # l is our cutoff 
+    Lambda_inf = Lambda_norm[:l]
+    Lambda_sup = Lambda_norm[l:]
+    H_inf = H_norm[:,:l]
+    H_sup = H_norm[:,l:]
+    SR_inf = SR[:l]
+    SR_sup = SR[l:]
+    return(SR_inf,SR_sup,Lambda_inf,Lambda_sup,H_inf,H_sup)
+
+            
+
         
