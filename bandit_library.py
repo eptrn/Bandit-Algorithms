@@ -71,10 +71,7 @@ def objective_function(n_assets,SR,k,tau,choices):
 def ucb_policy(n_assets,SR,k,tau,choices):
     return(np.argmax(objective_function(n_assets,SR,k,tau,choices)))
 
-# def James_Stein_Estimator(avg_return_estimate): #used to estimate the average return more precisely 
-#     alpha = (1/n_assets)
-    
-#     return(0)
+
 
         
 # class OrthogonalPortfolio():
